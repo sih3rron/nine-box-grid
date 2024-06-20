@@ -111,5 +111,9 @@ export function filter(data, matrix, sq){
   }})
 }
 
+export async function zoomToObject(id){
+  await miro.board.viewport.zoomTo(id)
+}
+
 
 

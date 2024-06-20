@@ -1,12 +1,11 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, createAFrame, filter } from './functions/helpers';
+import { csvStringToArray, createAFrame, filter, zoomToObject } from './functions/helpers';
 
 import '../src/assets/style.css';
 
 export default function App() {
-
   const [isFileSelected, setIsFileSelected] = useState(false);
   const [frameName, setFrameName] = useState(`Nine-Box-Grid | ${new Date().toLocaleDateString('en-US',{
             year: 'numeric',
@@ -97,6 +96,7 @@ export default function App() {
           });
 
         createGroup(squares)
+        zoomToObject(squares)
           
     }).catch(error => {
         console.error("Error creating shapes:", error);

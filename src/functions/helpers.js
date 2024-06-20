@@ -83,5 +83,33 @@ export async function createAFrame(group, name){
 
 };
 
+export function filter(data, matrix, sq){
+  
+  data.filter((d, j) => { 
+    if(
+
+    d.Block.toLowerCase().includes(matrix.h.toLowerCase()) 
+    && sq.content.toLowerCase().includes(matrix.h.toLowerCase())
+
+  ){ 
+    const row = Math.floor(j/6);
+    const col = j % 6;
+
+    miro.board.createStickyNote({
+      content: `<p>${d.Name}<br/>${d.Title}<br/>${d.Block}</p>`,
+      style: {
+        fillColor: `${d.Color}`, 
+        textAlign: 'center', 
+        textAlignVertical: 'middle', 
+      },
+      x: matrix.stX + (col * (40)), 
+      y: matrix.stY + (row * (40)), 
+      shape: 'square',
+      width: 40, 
+    })
+
+  }})
+}
+
 
 

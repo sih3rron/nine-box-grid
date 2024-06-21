@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, createAFrame, filter, zoomToObject } from './functions/helpers';
+import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup } from './functions/helpers';
 
 import '../src/assets/style.css';
 
@@ -13,10 +13,7 @@ export default function App() {
             day: '2-digit',
           })}`);
 
-  async function createGroup(ids, name = frameName) {
-    const group = await miro.board.group({items: ids});
-    await createAFrame(group, name);
-  }
+  
 
   function handleFileChange(e) {
     e.preventDefault();
@@ -41,7 +38,7 @@ export default function App() {
     const reader = new FileReader();
 
     reader.onload = async (e) => {
-
+      const newFrame = await createAnewFrame(frameName);
       const dimensions = 286.53049992182156;
       const matrix = [
         { h: "Intriguing Challenge", x: 187.34205855249775, y: -286.53049992182173, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: 74.18655885735689, stY: -351.3604318679564, },   
@@ -56,11 +53,10 @@ export default function App() {
         { h: "Effective Performer", x: 473.87255847432016, y: 286.53049992182173, content: "<p><b>Effective Performer</b></p>", color: "#FCCBCD" ,stX: 363.0359490263809, stY: 220.4881634851996, }, 
         { h: "Trusted Professional", x: 760.4030583961408, y: 286.53049992182173, content: "<p><b>Trusted Professional</b></p>", color: "#F6DFCE" ,stX: 648.5272246437689, stY: 220.4881634851996, },
       ];
+
       const csv = e.target.result;
       const data = csvStringToArray(csv, true).sort(compare);
-      
       const gridIds = [];
-
       const grid = matrix.map((x, i) => 
         miro.board.createShape({
             content: `<p>${x.content}</p>`,
@@ -86,18 +82,20 @@ export default function App() {
         })
     );
     
-    Promise.all(grid).then(squares => {
-        
-        squares.forEach(square => gridIds.push(square.id));
-        squares.forEach((sq, i) => {
+    Promise.all(grid).then((squares) => {
 
-            filter(data.filter(d => d.Block.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq);
+        squares.forEach((sq, i) => { 
+          filter(data.filter(d => d.Block.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq) 
+        });
 
-          });
-
-        createGroup(squares)
-        zoomToObject(squares)
+        createGroup(newFrame, squares);
           
+    }).then(()=> {
+      setTimeout(() => {
+        myStickyGroup(newFrame);
+        console.log("Grouped to the Frame!")
+      }, 2500);
+      
     }).catch(error => {
         console.error("Error creating shapes:", error);
     })

@@ -127,7 +127,7 @@ export default function App() {
           />
         </div>
         <div className="form-group ">
-          
+
           <label htmlFor="setBoxHeading">Label this Grid with Quarter and Year</label>
           <input 
             className="input" 
@@ -144,7 +144,7 @@ export default function App() {
 
         <div className="form-group">
           <label htmlFor="uploadFile">Upload your CSV file</label>
-          <input type="file" id="formFile" accept=".csv, .tsv" onChange={e => handleFileChange(e)} className='upload' />
+          <input type="file" id="uploadFile" accept=".csv, .tsv" onChange={e => handleFileChange(e)} className='upload' />
         </div>
 
         <button type="submit" className="button button-primary button-medium" disabled={!isFileSelected}>Submit</button>

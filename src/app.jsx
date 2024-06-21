@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup } from './functions/helpers';
+import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle } from './functions/helpers';
 
 import '../src/assets/style.css';
 
@@ -12,7 +12,8 @@ export default function App() {
             month: '2-digit',
             day: '2-digit',
           })}`);
-
+  
+  const [heading, setHeading] = useState("")
   
 
   function handleFileChange(e) {
@@ -39,6 +40,9 @@ export default function App() {
 
     reader.onload = async (e) => {
       const newFrame = await createAnewFrame(frameName);
+      const titleText= await createTitle(newFrame, heading);
+      const alignment = createContextItems(newFrame);
+
       const dimensions = 286.53049992182156;
       const matrix = [
         { h: "Intriguing Challenge", x: 187.34205855249775, y: -286.53049992182173, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: 74.18655885735689, stY: -351.3604318679564, },   
@@ -113,6 +117,7 @@ export default function App() {
       <form className="cs1 ce12 form-example--main-content" id="csvUpload" onSubmit={e => handleCSVFile(e)} >
 
         <div className="form-group">
+
           <label htmlFor="frameName">Name your Nine-Box Grid</label>
           <input className="input" type="text" id="frameName" placeholder="Nine-Box-Grid" onChange={e => setFrameName(`${e.target.value.toLowerCase().replace(/\s+/g, '-')} | ` + `${today.toLocaleDateString('en-US',{
             year: 'numeric',
@@ -120,6 +125,19 @@ export default function App() {
             day: '2-digit',
           })}`)}
           />
+        </div>
+        <div className="form-group ">
+          
+          <label htmlFor="setBoxHeading">Label this Grid with Quarter and Year</label>
+          <input 
+            className="input" 
+            type="text" 
+            id="setBoxHeading" 
+            placeholder="QQ - YYYY" 
+            onChange={e => setHeading(`${e.target.value}`)}
+            required
+          />
+          
         </div>
 
         <hr />

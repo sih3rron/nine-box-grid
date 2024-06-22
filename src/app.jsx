@@ -105,7 +105,7 @@ export default function App() {
     })
 
     }
-
+    
     reader.readAsText(file.files[0]);
   };
 
@@ -143,8 +143,8 @@ export default function App() {
         <hr />
 
         <div className="form-group">
-          <label htmlFor="uploadFile">Upload your CSV file</label>
-          <input type="file" id="uploadFile" accept=".csv, .tsv" onChange={e => handleFileChange(e)} className='upload' />
+          <label htmlFor="formFile">Upload your CSV file</label>
+          <input type="file" id="formFile" accept=".csv, .tsv" onChange={e => handleFileChange(e)} className='upload' />
         </div>
 
         <button type="submit" className="button button-primary button-medium" disabled={!isFileSelected}>Submit</button>

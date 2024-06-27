@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle } from './functions/helpers';
+import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle, createTags } from './functions/helpers';
 
 import '../src/assets/style.css';
 
@@ -42,7 +42,6 @@ export default function App() {
       const newFrame = await createAnewFrame(frameName);
       const titleText= await createTitle(newFrame, heading);
       const alignment = createContextItems(newFrame);
-
       const dimensions = 286.53049992182156;
       const matrix = [
         { h: "Intriguing Challenge", x: 187.34205855249775, y: -286.53049992182173, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: 74.18655885735689, stY: -351.3604318679564, },   
@@ -60,7 +59,6 @@ export default function App() {
 
       const csv = e.target.result;
       const data = csvStringToArray(csv, true).sort(compare);
-      const gridIds = [];
       const grid = matrix.map((x, i) => 
         miro.board.createShape({
             content: `<p>${x.content}</p>`,
@@ -83,23 +81,33 @@ export default function App() {
                 textAlign: "left",
                 textAlignVertical: "top",
             }
-        })
-    );
-    
-    Promise.all(grid).then((squares) => {
+        }));
 
+        const slalomTags = [];
+        data.filter(d => slalomTags.push({tag: d.Tags, color: d.Tag_Color}));
+        const slalomNewTags = {};
+        slalomTags.forEach(tagObj => {
+          if (!slalomNewTags[tagObj.tag]) {
+            slalomNewTags[tagObj.tag] = tagObj.color;
+          }
+        });
+
+        const tagsDictionary = await createTags(slalomNewTags);
+        console.log("My Tags Dictionary: ", tagsDictionary);
+
+
+    Promise.all(grid).then((squares) => {
+        
         squares.forEach((sq, i) => { 
-          filter(data.filter(d => d.Block.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq) 
+          filter(data.filter(d => d.Block.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq, tagsDictionary) 
         });
 
         createGroup(newFrame, squares);
-          
     }).then(()=> {
       setTimeout(() => {
         myStickyGroup(newFrame);
         console.log("Grouped to the Frame!")
       }, 2500);
-      
     }).catch(error => {
         console.error("Error creating shapes:", error);
     })

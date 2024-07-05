@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle, createTags } from './functions/helpers';
+import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle, createTags, createKey, contextTitles, createBullets } from './functions/helpers';
 
 import '../src/assets/style.css';
 
@@ -39,22 +39,26 @@ export default function App() {
     const reader = new FileReader();
 
     reader.onload = async (e) => {
+
       const newFrame = await createAnewFrame(frameName);
       const titleText= await createTitle(newFrame, heading);
+      const gridKey = await createKey(newFrame);
       const alignment = createContextItems(newFrame);
-      const dimensions = 286.53049992182156;
+      const performancePotential = await contextTitles(newFrame);
+      
+      const dimensions = 574.3092907695121;
       const matrix = [
-        { h: "Intriguing Challenge", x: 187.34205855249775, y: -286.53049992182173, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: 74.18655885735689, stY: -351.3604318679564, },   
-        { h: "Future Star", x: 473.87255847432016, y: -286.53049992182173, content: "<p><b>Future Star</b></p>", color: "#BDE6EA" ,stX: 363.0359490263809, stY: -351.3604318679564, }, 
-        { h: "Stand-out Leader", x: 760.4030583961408, y: -286.53049992182173, content: "<p><b>Stand-out Leader</b></p>", color: "#76D6DE" ,stX: 648.5272246437689, stY: -351.3604318679564, },
+        { h: "Intriguing Challenge", x: -574.3092907695125, y: -564.3403083610458, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: -806.006964892445, stY: -643.9482746210322, },   
+        { h: "Future Star", x: 1.8189894035458565e-12, y: -564.3403083610458 , content: "<p><b>Future Star</b></p>", color: "#BDE6EA" ,stX: -235.34116659719052, stY: -643.9482746210322, }, 
+        { h: "Stand-out Leader", x: 574.3092907695127 , y: -564.3403083610458, content: "<p><b>Stand-out Leader</b></p>", color: "#76D6DE" ,stX: 338.96812417232195, stY: -643.9482746210322, },
 
-        { h: "Puzzle/Concern", x: 187.34205855249775, y: 0, content: "<p><b>Puzzle/Concern</b></p>", color: "#FDCAD1" ,stX: 74.18655885735689, stY: -67.07240925567447, }, 
-        { h: "Core Player", x: 473.87255847432016, y: -2.2737367544323206e-13, content: "<p><b>Core Player</b></p>", color: "#F6DFD0" ,stX: 363.0359490263809, stY: -67.07240925567447, }, 
-        { h: "High Impact Performer", x: 760.4030583961408, y: -2.2737367544323206e-13, content: "<p><b>High Impact Performer</b></p>", color: "#BBE6E8" ,stX: 648.5272246437689, stY: -67.07240925567447,  },
+        { h: "Puzzle/Concern", x: -574.3092907695125, y: 9.968982408466672, content: "<p><b>Puzzle/Concern</b></p>", color: "#FDCAD1" ,stX: -809.6504573667032, stY: -96.71037866560482, }, 
+        { h: "Core Player", x: 1.8189894035458565e-12, y: 9.968982408466218, content: "<p><b>Core Player</b></p>", color: "#F6DFD0" ,stX: -235.34116659718893, stY: -96.71037866560482, }, 
+        { h: "High Impact Performer", x: 574.3092907695127, y: 9.968982408466218, content: "<p><b>High Impact Performer</b></p>", color: "#BBE6E8" ,stX: 338.96812417232195, stY: -96.71037866560482,  },
 
-        { h: "Needs Improvement", x: 187.34205855249775, y: 286.53049992182173, content: "<p><b>Needs Improvement</b></p>", color: "#FFA1A6" ,stX: 74.18655885735689, stY: 220.4881634851996,  }, 
-        { h: "Effective Performer", x: 473.87255847432016, y: 286.53049992182173, content: "<p><b>Effective Performer</b></p>", color: "#FCCBCD" ,stX: 363.0359490263809, stY: 220.4881634851996, }, 
-        { h: "Trusted Professional", x: 760.4030583961408, y: 286.53049992182173, content: "<p><b>Trusted Professional</b></p>", color: "#F6DFCE" ,stX: 648.5272246437689, stY: 220.4881634851996, },
+        { h: "Needs Improvement", x: -574.3092907695125, y: 584.2782731779791, content: "<p><b>Needs Improvement</b></p>", color: "#FFA1A6" ,stX: -809.6504573667032, stY: 474.381371214962,  }, 
+        { h: "Effective Performer", x: 1.8189894035458565e-12, y: 584.2782731779791, content: "<p><b>Effective Performer</b></p>", color: "#FCCBCD" ,stX: -235.34116659718893, stY: 474.381371214962, }, 
+        { h: "Trusted Professional", x: 574.3092907695127, y: 584.2782731779791, content: "<p><b>Trusted Professional</b></p>", color: "#F6DFCE" ,stX: 338.96812417232195, stY: 474.381371214962, },
       ];
 
       const csv = e.target.result;
@@ -77,13 +81,13 @@ export default function App() {
                 fillColor: `${x.color}`,
                 fillOpacity: 1,
                 fontFamily: "open_sans",
-                fontSize: 10,
+                fontSize: 18,
                 textAlign: "left",
                 textAlignVertical: "top",
             }
         }));
 
-        const slalomTags = [];
+        /* const slalomTags = [];
         data.filter(d => slalomTags.push({tag: d.Tags, color: d.Tag_Color}));
         const slalomNewTags = {};
         slalomTags.forEach(tagObj => {
@@ -93,13 +97,13 @@ export default function App() {
         });
 
         const tagsDictionary = await createTags(slalomNewTags);
-        console.log("My Tags Dictionary: ", tagsDictionary);
-
-
+        console.log("My Tags Dictionary: ", tagsDictionary); */
+        const tagsDictionary = [];
+        const bulletPoints = await createBullets(newFrame);
     Promise.all(grid).then((squares) => {
         
         squares.forEach((sq, i) => { 
-          filter(data.filter(d => d.Block.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq, tagsDictionary) 
+          filter(data.filter(d => d.Box.toLowerCase().includes(matrix[i].h.toLowerCase())), matrix[i], sq, tagsDictionary) 
         });
 
         createGroup(newFrame, squares);

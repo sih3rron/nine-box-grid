@@ -42,7 +42,7 @@ export function filter(data, matrix, sq, dictionary) {
       miro.board.createStickyNote({
         content: `<p>${d.Name}</p>`,
         style: {
-          fillColor: "light_yellow",
+          fillColor: assignStickyColor(d.Title),
           textAlign: "center",
           textAlignVertical: "middle",
         },
@@ -50,7 +50,7 @@ export function filter(data, matrix, sq, dictionary) {
         y: matrix.stY + (row * (63)),
         shape: "square",
         width: 63,
-        //tagIds: [dictionary.find(t => t.title.toLowerCase() === d.Tags.toLowerCase()).id],
+        tagIds: d["Talent Mgmt Flag"] !== "" ? [dictionary.find(t => t.title.toLowerCase() === d["Talent Mgmt Flag"].toLowerCase()).id] : [],
       }).then((note) => {
         miro.board.select({ id: note.id });
       });
@@ -148,6 +148,47 @@ export function createContextItems(newFrame) {
   });
 }
 
+export function getTagColor(tagname){
+  const preassignedTags = [
+    { tag:"ITP in Progress", color: "gray"},
+    { tag:"Promo Ready", color: "green"},
+    { tag:"Recent Promo (<12mo.)", color: "light_green"},
+    { tag:"PIP", color: "red"}
+  ]
+
+  const assignedTag = preassignedTags.find(pat => pat.tag === tagname);
+
+  return assignedTag ? assignedTag.color : "yellow";
+}
+
+export function assignStickyColor(title){
+  const preAssignedTitles = [
+    { title:"Associate Consultant", color: "light_green" },
+    { title:"Consultant", color: "light_green" },
+    { title:"Senior Consultant", color: "light_green" },
+    { title:"SC + People Leadership", color: "pink" },
+    { title:"Principal", color: "green" },
+    { title:"Senior Principal", color: "green" },
+    { title:"Director", color: "violet" },
+    { title:"Senior Director", color: "violet" },
+    { title:"Managing Director", color: "violet" },
+    { title:"Sr. Manager", color: "blue" },
+    { title:"Analyst", color: "orange" },
+    { title:"Manager", color: "blue" },
+    { title:"Lead", color: "blue" },
+    { title:"Sr. Specialist", color: "orange" },
+    { title:"Coordinator", color: "cyan" },
+    { title:"Sr. Sales Director", color: "dark_blue" },
+    { title:"Sales Executive", color: "dark_blue" },
+  ];
+
+
+
+  const assignedTitle = preAssignedTitles.find(pati => pati.title === title);
+
+  return assignedTitle ? assignedTitle.color : "black";
+}
+
 export async function createAnewFrame(name, squares) {
   const frame = await miro.board.createFrame({
     title: `${name}`,
@@ -227,7 +268,7 @@ export async function createTags(tags) {
 
       dictionary.push({
         title: newTag.title,
-        color: newTag.color,
+        color: 'yellow',
         id: newTag.id,
       });
     }

@@ -1,7 +1,7 @@
 import * as React from 'react';
 import { useState } from 'react';
 import { createRoot } from 'react-dom/client';
-import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle, createTags, createKey, contextTitles, createBullets } from './functions/helpers';
+import { csvStringToArray, filter, myStickyGroup, createAnewFrame, createGroup, createContextItems, createTitle, createTags, createKey, contextTitles, createBullets, getTagColor } from './functions/helpers';
 
 import '../src/assets/style.css';
 
@@ -45,8 +45,8 @@ export default function App() {
       const gridKey = await createKey(newFrame);
       const alignment = createContextItems(newFrame);
       const performancePotential = await contextTitles(newFrame);
-      
       const dimensions = 574.3092907695121;
+
       const matrix = [
         { h: "Intriguing Challenge", x: -574.3092907695125, y: -564.3403083610458, content: "<p><b>Intriguing Challenge</b></p>", color: "#F7DFD2" , stX: -806.006964892445, stY: -643.9482746210322, },   
         { h: "Future Star", x: 1.8189894035458565e-12, y: -564.3403083610458 , content: "<p><b>Future Star</b></p>", color: "#BDE6EA" ,stX: -235.34116659719052, stY: -643.9482746210322, }, 
@@ -87,9 +87,16 @@ export default function App() {
             }
         }));
 
-        /* const slalomTags = [];
-        data.filter(d => slalomTags.push({tag: d.Tags, color: d.Tag_Color}));
-        const slalomNewTags = {};
+        const slalomTags = [];
+        const slalomNewTags = data.filter(d => { 
+          if(d["Talent Mgmt Flag"] !== "")
+            { slalomTags.push(
+              { tag: d["Talent Mgmt Flag"], 
+                color: getTagColor(d["Talent Mgmt Flag"])
+              }
+
+          )}});
+
         slalomTags.forEach(tagObj => {
           if (!slalomNewTags[tagObj.tag]) {
             slalomNewTags[tagObj.tag] = tagObj.color;
@@ -97,8 +104,9 @@ export default function App() {
         });
 
         const tagsDictionary = await createTags(slalomNewTags);
-        console.log("My Tags Dictionary: ", tagsDictionary); */
-        const tagsDictionary = [];
+        console.log("My Tags Dictionary: ", tagsDictionary);
+
+        //const tagsDictionary = [];
         const bulletPoints = await createBullets(newFrame);
     Promise.all(grid).then((squares) => {
         

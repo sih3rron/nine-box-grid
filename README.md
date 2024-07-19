@@ -63,6 +63,8 @@ For more information, visit the [Miro developer documentation](https://developer
 ├── src
 │  ├── assets
 │  │  └── style.css
+│  ├── functions
+│  │  └── helpers.js // Coded into exported functions to make specific customizations simpler
 │  ├── app.jsx     // The code for the app lives here
 │  └── index.js    // The code for the app entry point lives here
 ├── app.html       // The app itself. It's loaded on the board inside the 'appContainer'

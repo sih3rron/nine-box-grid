@@ -163,15 +163,15 @@ export function getTagColor(tagname){
 
 export function assignStickyColor(title){
   const preAssignedTitles = [
-    { title:"Associate Consultant", color: "light_green" },
-    { title:"Consultant", color: "light_green" },
+    { title:"Associate Consultant", color: "orange" },
+    { title:"Consultant", color: "yellow" },
     { title:"Senior Consultant", color: "light_green" },
-    { title:"SC + People Leadership", color: "pink" },
-    { title:"Principal", color: "green" },
-    { title:"Senior Principal", color: "green" },
-    { title:"Director", color: "violet" },
-    { title:"Senior Director", color: "violet" },
-    { title:"Managing Director", color: "violet" },
+    { title:"SC + People Leadership", color: "light_blue" },
+    { title:"Principal", color: "violet" },
+    { title:"Senior Principal", color: "light_green" },
+    { title:"Director", color: "cyan" },
+    { title:"Senior Director", color: "gray" },
+    /* { title:"Managing Director", color: "violet" },
     { title:"Sr. Manager", color: "blue" },
     { title:"Analyst", color: "orange" },
     { title:"Manager", color: "blue" },
@@ -179,7 +179,7 @@ export function assignStickyColor(title){
     { title:"Sr. Specialist", color: "orange" },
     { title:"Coordinator", color: "cyan" },
     { title:"Sr. Sales Director", color: "dark_blue" },
-    { title:"Sales Executive", color: "dark_blue" },
+    { title:"Sales Executive", color: "dark_blue" }, */
   ];
 
 
@@ -279,25 +279,45 @@ export async function createTags(tags) {
 
 export async function createKey(newFrame) {
   const titles = [{
-    title: "Sr Consultant with Direct Reports",
-    color: "light_green",
+    title: "Senior Consultant",
+    color: "blue",
     x: 1412.2563149682228,
     y: -995.6512570974843,
   }, {
-    title: "Sr Consultant",
-    color: "light_pink",
+    title: "Consultant",
+    color: "yellow",
     x: 1555.6274929354358,
     y: -995.6512570974843,
   }, {
-    title: "Consultant",
-    color: "light_yellow",
+    title: "Associate Consultant",
+    color: "orange",
     x: 1698.9395258682925,
     y: -995.6512570974843,
   }, {
-    title: "Associate Consultant",
-    color: "black",
+    title: "SC + People Leadership",
+    color: "light_blue",
     x: 1842.2515588011493,
     y: -995.6512570974843,
+  }, {
+    title: "Senior Principal",
+    color: "light_green",
+    x: 1412.2563149682228,
+    y: -846.3490284105933,
+  }, {
+    title: "Principal",
+    color: "violet",
+    x: 1555.6274929354358,
+    y: -846.3490284105933,
+  }, {
+    title: "Senior Director",
+    color: "gray",
+    x: 1698.9395258682925,
+    y: -846.3490284105933,
+  }, {
+    title: "Director",
+    color: "cyan",
+    x: 1842.2515588011493,
+    y: -846.3490284105933,
   }];
 
   const outline = await miro.board.createShape({
@@ -305,9 +325,9 @@ export async function createKey(newFrame) {
     shape: "rectangle",
     relativeTo: "canvas_center",
     x: 1603.1581758467682,
-    y: -995.6512570974843,
+    y: -857.6512570974844,
     width: 716.0506711419537,
-    height: 179.1166405233987,
+    height: 477.35175499945814,
     style: {
       borderColor: "#1a1a1a",
       borderOpacity: 1,
@@ -322,23 +342,30 @@ export async function createKey(newFrame) {
     },
   });
 
-  titles.forEach(async (t) => {
-    const keySticky = await miro.board.createStickyNote({
-      content: `<p>${t.title}</p>`,
-      style: {
-        fillColor: `${t.color}`,
-        textAlign: "center",
-        textAlignVertical: "middle",
-      },
-      x: t.x,
-      y: t.y,
-      shape: "square",
-      width: 130.31203293285665,
-    });
-    await newFrame.add(keySticky);
-  });
-
   await newFrame.add(outline);
+
+
+    titles.forEach(
+      async (t) => {
+
+      const keySticky = await miro.board.createStickyNote({
+        content: `<p>${t.title}</p>`,
+        style: {
+          fillColor: `${t.color}`,
+          textAlign: "center",
+          textAlignVertical: "middle",
+        },
+        x: t.x,
+        y: t.y,
+        shape: "square",
+        width: 130.31203293285665,
+      });
+
+      await newFrame.add(keySticky);
+      
+    });
+
+  
 }
 
 export async function contextTitles(newFrame) {
